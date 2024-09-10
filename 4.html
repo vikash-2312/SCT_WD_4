@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <style>
+    
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .task-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .task-input input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .task-input input[type="datetime-local"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .task-input button {
+            padding: 8px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-input button:hover {
+            background-color: #218838;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .task-item.completed .task-name {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .task-item button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .task-item button:hover {
+            background-color: #c82333;
+        }
+
+        .task-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>To-Do List</h1>
+        <div class="task-input">
+            <input type="text" id="task-name" placeholder="Add a new task...">
+            <input type="datetime-local" id="task-datetime">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <ul id="task-list"></ul>
+    </div>
+
+    <script>
+        
+        function addTask() {
+            const taskNameInput = document.getElementById('task-name');
+            const taskDateTimeInput = document.getElementById('task-datetime');
+            const taskList = document.getElementById('task-list');
+
+            const taskName = taskNameInput.value;
+            const taskDateTime = taskDateTimeInput.value;
+
+            if (taskName.trim() === '') {
+                alert('Please enter a task name.');
+                return;
+            }
+
+           
+            const li = document.createElement('li');
+            li.className = 'task-item';
+
+            
+            li.innerHTML = `
+                <span class="task-content">
+                    <input type="checkbox" onclick="toggleTaskCompletion(this)">
+                    <span class="task-name">${taskName}</span>
+                    <span class="task-datetime">${taskDateTime}</span>
+                </span>
+                <button onclick="editTask(this)">Edit</button>
+                <button onclick="deleteTask(this)">Delete</button>
+            `;
+
+            taskList.appendChild(li);
+
+            // Clear input fields
+            taskNameInput.value = '';
+            taskDateTimeInput.value = '';
+        }
+
+        // Function to mark task as completed
+        function toggleTaskCompletion(checkbox) {
+            const taskItem = checkbox.closest('.task-item');
+            taskItem.classList.toggle('completed');
+        }
+
+        // Function to edit a task
+        function editTask(button) {
+            const taskItem = button.closest('.task-item');
+            const taskNameSpan = taskItem.querySelector('.task-name');
+            const taskDateTimeSpan = taskItem.querySelector('.task-datetime');
+
+            const newTaskName = prompt('Edit task name:', taskNameSpan.textContent);
+            const newTaskDateTime = prompt('Edit task date and time:', taskDateTimeSpan.textContent);
+
+            if (newTaskName !== null) taskNameSpan.textContent = newTaskName;
+            if (newTaskDateTime !== null) taskDateTimeSpan.textContent = newTaskDateTime;
+        }
+
+        // Function to delete a task
+        function deleteTask(button) {
+            const taskItem = button.closest('.task-item');
+            taskItem.remove();
+        }
+    </script>
+</body>
+</html>
